@@ -7,7 +7,8 @@
 #include <windef.h>
 #include "Cluster.h"
 
-double Range = 1000;
+
+double Range = 10;
 int nPoint = 500;
 int nCluster = 10;
 int itr = 20;
@@ -17,23 +18,23 @@ using namespace std::chrono;
 
 void initPoint(struct point *points, int numPoint);
 
-void initPointArray(struct pointArray points, int numPoint);
+void initPointArray(struct pointArray *points, int numPoint);
 
 vector<Cluster> initCluster(int numCluster);
 
 void computeDistancePoint(struct point *points, vector<Cluster> &clusters, int nPoint);
 
-void computeDistancePointArray(struct pointArray points, vector<Cluster> &clusters, int nPoint);
+void computeDistancePointArray(struct pointArray *points, vector<Cluster> &clusters, int nPoint);
 
 double euclideanDistPoint(struct point p, Cluster c);
 
-double euclideanDistPointArray(long x, long y, Cluster c);
+double euclideanDistPointArray(double x, double y, Cluster c);
 
 bool updateClusters(vector<Cluster> &clusters);
 
 void drawChartPoint(struct point *points, int nPoint);
 
-void drawChartPointArray(struct pointArray points, int nPoint);
+void drawChartPointArray(struct pointArray *points, int nPoint);
 
 struct point {
     double x;
@@ -73,7 +74,7 @@ int main() {
         duration = time - end;
         cout << "Aggiornamento dei Clusters con " << iterations << " iterazioni in: " << duration << "s\n";
         try {
-            //drawChartPoint(points, nPoint);
+            drawChartPoint(points, nPoint);
         } catch (int e) {
             cout << "Errore generazione grafico\n";
         }
@@ -84,7 +85,7 @@ int main() {
         double timeStart = omp_get_wtime();
         cout << "Creazione di " << nPoint << " punti casuali\n";
         struct pointArray points;
-        initPointArray(points, nPoint);
+        initPointArray(&points, nPoint);
         cout << "Creazione di " << nCluster << " Clusters\n";
         vector<Cluster> clusters = initCluster(nCluster);
         double end = omp_get_wtime();
@@ -94,14 +95,14 @@ int main() {
         int iterations = 0;
         while (conv && iterations < itr) {
             iterations++;
-            computeDistancePointArray(points, clusters, nPoint);
+            computeDistancePointArray(&points, clusters, nPoint);
             conv = updateClusters(clusters);
         }
         double time = omp_get_wtime();
         duration = time - end;
         cout << "Aggiornamento dei Clusters con " << iterations << " iterazioni in: " << duration << "s\n";
         try {
-            //drawChartPointArray(points, nPoint);
+            drawChartPointArray(&points, nPoint);
         } catch (int e) {
             cout << "Errore generazione grafico\n";
         }
@@ -116,10 +117,10 @@ void initPoint(struct point *points, int numPoint) {
     }
 }
 
-void initPointArray(struct pointArray points, int numPoint) {
+void initPointArray(struct pointArray *points, int numPoint) {
     for (int i = 0; i < numPoint; i++) {
-        points.x[i] = rand() % (int) Range;
-        points.y[i] = rand() % (int) Range;
+        points->x[i] = rand() % (int) Range;
+        points->y[i] = rand() % (int) Range;
     }
 }
 
@@ -153,23 +154,23 @@ void computeDistancePoint(struct point *points, vector<Cluster> &clusters, int n
     }
 }
 
-void computeDistancePointArray(struct pointArray points, vector<Cluster> &clusters, int nPoint) {
+void computeDistancePointArray(struct pointArray *points, vector<Cluster> &clusters, int nPoint) {
     unsigned long clustersSize = clusters.size();
     double minDistance;
     int minIndex;
     for (int i = 0; i < nPoint; i++) {
-        minDistance = euclideanDistPointArray(points.x[i], points.y[i], clusters[0]);
+        minDistance = euclideanDistPointArray(points->x[i], points->y[i], clusters[0]);
         minIndex = 0;
         for (int j = 1; j < clustersSize; j++) {
             Cluster &cluster = clusters[j];
-            double distance = euclideanDistPointArray(points.x[i], points.y[i], cluster);
+            double distance = euclideanDistPointArray(points->x[i], points->y[i], cluster);
             if (distance < minDistance) {
                 minDistance = distance;
                 minIndex = j;
             }
         }
-        points.clusterID[i] = minIndex;
-        clusters[minIndex].addPoint(points.x[i], points.y[i]);
+        points->clusterID[i] = minIndex;
+        clusters[minIndex].addPoint(points->x[i], points->y[i]);
     }
 }
 
@@ -178,7 +179,7 @@ double euclideanDistPoint(struct point p, Cluster c) {
     return dist;
 }
 
-double euclideanDistPointArray(long x, long y, Cluster c) {
+double euclideanDistPointArray(double x, double y, Cluster c) {
     double dist = sqrt(pow(x - c.getX(), 2) + pow(y - c.getY(), 2));
     return dist;
 }
@@ -196,6 +197,6 @@ void drawChartPoint(struct point *points, int nPoint) {
 
 }
 
-void drawChartPointArray(struct pointArray points, int nPoint) {
+void drawChartPointArray(struct pointArray *points, int nPoint) {
 
 }
