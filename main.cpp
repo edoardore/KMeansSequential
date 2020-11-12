@@ -8,9 +8,9 @@
 #include "Cluster.h"
 
 
-double Range = 100000;
+double Range = 10000000;
 int nPoint = 500;
-int nCluster = 3;
+int nCluster = 5;
 int itr = 20;
 
 using namespace std;
@@ -43,9 +43,9 @@ struct point {
 };
 
 struct pointArray {
-    double x[500];
-    double y[500];
-    int clusterID[500];
+    double x[5000];
+    double y[5000];
+    int clusterID[5000];
 };
 
 int main() {
@@ -199,7 +199,7 @@ void drawChartPoint(struct point *points, int nPoint) {
         outfile << points[i].x << " " << points[i].y << " " << points[i].clusterID << std::endl;
     }
     outfile.close();
-    system("gnuplot -p -e \"plot 'dataPoint.txt' using 1:2:3 with points pt 7 ps 2 palette notitle \"");
+    system("gnuplot -p -e \"plot 'dataPoint.txt' using 1:2:3 with points pt 7 ps 1 palette notitle \"");
     remove("dataPoint.txt");
 }
 
@@ -209,6 +209,6 @@ void drawChartPointArray(struct pointArray *points, int nPoint) {
         outfile << points->x[i] << " " << points->y[i] << " " << points->clusterID[i] << std::endl;
     }
     outfile.close();
-    system("gnuplot -p -e \"plot 'dataPointArray.txt' using 1:2:3 with points pt 7 ps 2 palette notitle \"");
+    system("gnuplot -p -e \"plot 'dataPointArray.txt' using 1:2:3 with points pt 7 ps 1 palette notitle \"");
     remove("dataPointArray.txt");
 }
