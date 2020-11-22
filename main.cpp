@@ -8,7 +8,7 @@
 #include "Cluster.h"
 
 
-double Range = 10000000;
+double Range = 100000;
 int nPoint = 500;
 int nCluster = 5;
 int itr = 20;
@@ -63,12 +63,12 @@ int main() {
         double end = omp_get_wtime();
         auto duration = end - timeStart;
         cout << "Punti e Clusters generati in: " << duration << "s\n";
-        bool conv = true;
+        bool updated = true;
         int iterations = 0;
-        while (conv && iterations < itr) {
+        while (updated && iterations < itr) {
             iterations++;
             computeDistancePoint(points, clusters, nPoint);
-            conv = updateClusters(clusters);
+            updated = updateClusters(clusters);
         }
         double time = omp_get_wtime();
         duration = time - end;
@@ -91,12 +91,12 @@ int main() {
         double end = omp_get_wtime();
         auto duration = end - timeStart;
         cout << "Punti e Clusters generati in: " << duration << "s\n";
-        bool conv = true;
+        bool updated = true;
         int iterations = 0;
-        while (conv && iterations < itr) {
+        while (updated && iterations < itr) {
             iterations++;
             computeDistancePointArray(&points, clusters, nPoint);
-            conv = updateClusters(clusters);
+            updated = updateClusters(clusters);
         }
         double time = omp_get_wtime();
         duration = time - end;
@@ -185,12 +185,12 @@ double euclideanDistPointArray(double x, double y, Cluster c) {
 }
 
 bool updateClusters(vector<Cluster> &clusters) {
-    bool conv = false;
+    bool updated = false;
     for (int i = 0; i < clusters.size(); i++) {
-        conv = clusters[i].update();
+        updated = clusters[i].update();
         clusters[i].freePoint();
     }
-    return conv;
+    return updated;
 }
 
 void drawChartPoint(struct point *points, int nPoint) {
