@@ -5,7 +5,7 @@ Progetto mid-term di Parallel Computing
 Eseguire il modulo main.cpp, cambiare i valori delle variabili globali per diversi risultati:
 ```c++
 double Range = 99999;
-int nPoint = 5000;
+const int nPoint = 5000;
 int nCluster = 5;
 int itr = 20;
 ```
