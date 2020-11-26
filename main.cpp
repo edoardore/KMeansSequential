@@ -9,7 +9,7 @@
 
 
 double Range = 100000;
-int nPoint = 500;
+const int nPoint = 500;
 int nCluster = 5;
 int itr = 20;
 
@@ -43,9 +43,9 @@ struct point {
 };
 
 struct pointArray {
-    double x[5000];
-    double y[5000];
-    int clusterID[5000];
+    double x[nPoint];
+    double y[nPoint];
+    int clusterID[nPoint];
 };
 
 int main() {
