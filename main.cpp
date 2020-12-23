@@ -9,7 +9,7 @@
 
 
 double Range = 100000;
-const int nPoint = 500;
+const int nPoint = 5000;
 int nCluster = 5;
 int itr = 20;
 
